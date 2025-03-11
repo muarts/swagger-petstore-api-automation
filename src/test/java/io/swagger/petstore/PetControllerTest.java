@@ -53,9 +53,7 @@ public class PetControllerTest {
         List<Pet> pets = petController.getPetsByStatus(petStatus.toString(), HttpStatus.SC_OK)
                 .jsonPath().getList(".", Pet.class);
 
-        pets.forEach(pet -> {
-            assertThat(pet.getStatus(), equalTo(petStatus));
-        });
+        pets.forEach(pet -> assertThat(pet.getStatus(), equalTo(petStatus)));
     }
 
     @Test
@@ -63,8 +61,6 @@ public class PetControllerTest {
         List<Pet> pets = petController.getPetsByStatus("available,pending", HttpStatus.SC_OK)
                 .jsonPath().getList(".", Pet.class);
 
-        pets.forEach(pet -> {
-            assertThat(pet.getStatus(), either(equalTo(PetStatus.available)).or(equalTo(PetStatus.pending)));
-        });
+        pets.forEach(pet -> assertThat(pet.getStatus(), either(equalTo(PetStatus.available)).or(equalTo(PetStatus.pending))));
     }
 }
