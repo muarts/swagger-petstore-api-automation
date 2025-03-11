@@ -63,4 +63,18 @@ public class PetControllerTest {
 
         pets.forEach(pet -> assertThat(pet.getStatus(), either(equalTo(PetStatus.available)).or(equalTo(PetStatus.pending))));
     }
+
+    @Test
+    public void testUpdateAnExistingPet() {
+        Pet pet = getPet();
+        petController.postPet(pet, HttpStatus.SC_OK)
+                .as(Pet.class);
+        pet.setStatus(PetStatus.sold);
+        pet.setName("Bella");
+        Pet updatedPet = petController.updateAnExistingPet(pet, HttpStatus.SC_OK)
+                .as(Pet.class);
+
+        assertThat(updatedPet.getStatus(), equalTo(pet.getStatus()));
+        assertThat(updatedPet.getName(), equalTo("Bella"));
+    }
 }

@@ -50,4 +50,19 @@ public class PetController {
                 .extract()
                 .response();
     }
+
+    public Response updateAnExistingPet(Pet pet, int statusCode) {
+        return given()
+                .baseUri("https://petstore.swagger.io/v2")
+                .accept("application/json")
+                .contentType("application/json")
+                .body(pet)
+                .when()
+                .put("/pet")
+                .then()
+                .assertThat()
+                .statusCode(statusCode)
+                .extract()
+                .response();
+    }
 }
