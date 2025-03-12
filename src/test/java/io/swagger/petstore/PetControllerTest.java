@@ -8,15 +8,16 @@ import io.swagger.petstore.testdata.DataProviders;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.List;
 
+import static io.swagger.petstore.CommonConstants.*;
 import static io.swagger.petstore.ErrorMessageConstants.*;
 import static io.swagger.petstore.testdata.Helper.getRandomNumber;
 import static io.swagger.petstore.testdata.Helper.waitFor;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.either;
-import static org.hamcrest.Matchers.equalTo;
 import static io.swagger.petstore.testdata.PetControllerTestData.getPet;
+import static org.hamcrest.Matchers.*;
 
 public class PetControllerTest {
 
@@ -108,5 +109,18 @@ public class PetControllerTest {
         assertThat(apiResponse.getCode(), equalTo(ERROR_CODE));
         assertThat(apiResponse.getType(), equalTo(ERROR_TYPE));
         assertThat(apiResponse.getMessage(), equalTo(PET_NOT_FOUND));
+    }
+
+    @Test
+    public void testUploadAnImageOfPet() {
+        Pet pet = getPet();
+        Pet dog = petController.postPet(pet, HttpStatus.SC_OK).as(Pet.class);
+        File file = new File(FILEPATH_TO_IMAGE);
+        ApiResponse apiResponse = petController.uploadImage(Integer.valueOf(String.valueOf(dog.getId())), file, HttpStatus.SC_OK)
+                .as(ApiResponse.class);
+
+        assertThat(apiResponse.getCode(), equalTo(SUCCESS_CODE));
+        assertThat(apiResponse.getType(), equalTo(API_RESPONSE_UNKNOWN_TYPE));
+        assertThat(apiResponse.getMessage(), containsString(IMAGE_NAME));
     }
 }

@@ -3,6 +3,8 @@ package io.swagger.petstore.controller;
 import io.restassured.response.Response;
 import io.swagger.petstore.model.Pet;
 
+import java.io.File;
+
 import static io.restassured.RestAssured.given;
 
 
@@ -74,6 +76,22 @@ public class PetController {
                 .pathParam("petId", petId)
                 .when()
                 .delete("/pet/{petId}")
+                .then()
+                .assertThat()
+                .statusCode(statusCode)
+                .extract()
+                .response();
+    }
+
+    public Response uploadImage(Integer petId, File file, int statusCode) {
+        return given()
+                .baseUri("https://petstore.swagger.io/v2")
+                .pathParam("petId", petId)
+                .accept("application/json")
+                .contentType("multipart/form-data")
+                .multiPart("file", file, "image/jpeg")
+                .when()
+                .post("/pet/{petId}/uploadImage")
                 .then()
                 .assertThat()
                 .statusCode(statusCode)
