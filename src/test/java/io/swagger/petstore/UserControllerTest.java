@@ -7,8 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
-import java.util.Date;
-
 import static io.swagger.petstore.CommonConstants.*;
 import static io.swagger.petstore.testdata.Helper.getRandomString;
 import static io.swagger.petstore.testdata.Helper.getTime;
