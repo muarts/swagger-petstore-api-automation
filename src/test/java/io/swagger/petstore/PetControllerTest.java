@@ -81,6 +81,15 @@ public class PetControllerTest {
         assertThat(updatedPet.getName(), equalTo(UPDATED_DOG_NAME));
     }
 
+    // A bug that needs to be fixed.
+    @Test
+    public void testReturnAnErrorWhenStatusToUpdateIsInvalid() {
+        Pet pet = getPet();
+        petController.postPet(pet, HttpStatus.SC_OK).as(Pet.class);
+        pet.setStatus(PetStatus.invalid_status);
+        petController.updateAnExistingPet(pet, HttpStatus.SC_BAD_REQUEST);
+    }
+
     @Test
     public void testDeletesAPet() {
         Pet pet = getPet();
