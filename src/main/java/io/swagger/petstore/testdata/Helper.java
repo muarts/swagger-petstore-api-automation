@@ -11,12 +11,5 @@ public class Helper {
     public static String getRandomString() {
         return RandomStringUtils.randomAlphanumeric(5);
     }
-
-    public static void waitFor(int ms) {
-        try {
-            Thread.sleep(ms);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
+    
 }

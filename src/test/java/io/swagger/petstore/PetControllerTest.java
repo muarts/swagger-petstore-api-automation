@@ -13,8 +13,7 @@ import java.util.List;
 
 import static io.swagger.petstore.CommonConstants.*;
 import static io.swagger.petstore.ErrorMessageConstants.*;
-import static io.swagger.petstore.testdata.Helper.getRandomNumber;
-import static io.swagger.petstore.testdata.Helper.waitFor;
+import static io.swagger.petstore.testdata.Helper.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static io.swagger.petstore.testdata.PetControllerTestData.getPet;
 import static org.hamcrest.Matchers.*;
@@ -40,7 +39,6 @@ public class PetControllerTest {
     public void testFindPetByID() {
         Pet pet = getPet();
         petController.postPet(pet, HttpStatus.SC_OK).as(Pet.class);
-        waitFor(3000);
         Pet retrievedPet = petController.getPetByPetId(String.valueOf(pet.getId()), HttpStatus.SC_OK)
                 .as(Pet.class);
 
@@ -122,5 +120,19 @@ public class PetControllerTest {
         assertThat(apiResponse.getCode(), equalTo(SUCCESS_CODE));
         assertThat(apiResponse.getType(), equalTo(API_RESPONSE_UNKNOWN_TYPE));
         assertThat(apiResponse.getMessage(), containsString(IMAGE_NAME));
+    }
+
+    @Test
+    public void testUpdateAPetInTheStoreWithFormData() {
+        Pet pet = getPet();
+        Pet petToUpdate = petController.postPet(pet, HttpStatus.SC_OK).as(Pet.class);
+        Integer petId = Integer.valueOf(String.valueOf(petToUpdate.getId()));
+        String newName = getRandomString();
+        ApiResponse apiResponse = petController.updateAPetWithFormData(newName, "sold", petId, HttpStatus.SC_OK)
+                .as(ApiResponse.class);
+
+        assertThat(apiResponse.getCode(), equalTo(SUCCESS_CODE));
+        assertThat(apiResponse.getType(), equalTo(API_RESPONSE_UNKNOWN_TYPE));
+        assertThat(apiResponse.getMessage(), equalTo(String.valueOf(petId)));
     }
 }

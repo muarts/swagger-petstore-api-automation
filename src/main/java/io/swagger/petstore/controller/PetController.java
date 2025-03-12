@@ -98,4 +98,21 @@ public class PetController {
                 .extract()
                 .response();
     }
+
+    public Response updateAPetWithFormData(String name, String status, Integer petId, int statusCode) {
+        return given()
+                .baseUri("https://petstore.swagger.io/v2")
+                .accept("application/json")
+                .pathParam("petId", petId)
+                .contentType("application/x-www-form-urlencoded")
+                .formParam("name", name)
+                .formParam("status", status)
+                .when()
+                .post("/pet/{petId}")
+                .then()
+                .assertThat()
+                .statusCode(statusCode)
+                .extract()
+                .response();
+    }
 }
