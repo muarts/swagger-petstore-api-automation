@@ -1,6 +1,7 @@
 package io.swagger.petstore;
 
 import io.swagger.petstore.controller.PetController;
+import io.swagger.petstore.model.ApiResponse;
 import io.swagger.petstore.model.Pet;
 import io.swagger.petstore.model.status.PetStatus;
 import io.swagger.petstore.testdata.DataProviders;
@@ -9,6 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static io.swagger.petstore.testdata.Helper.getRandomNumber;
 import static io.swagger.petstore.testdata.Helper.waitFor;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.either;
@@ -74,5 +76,33 @@ public class PetControllerTest {
 
         assertThat(updatedPet.getStatus(), equalTo(pet.getStatus()));
         assertThat(updatedPet.getName(), equalTo("Bella"));
+    }
+
+    @Test
+    public void testDeletesAPet() {
+        Pet pet = getPet();
+        petController.postPet(pet, HttpStatus.SC_OK).as(Pet.class);
+        petController.deleteAPet(String.valueOf(pet.getId()), HttpStatus.SC_OK);
+        ApiResponse apiResponse = petController.getPetByPetId(String.valueOf(pet.getId()), HttpStatus.SC_NOT_FOUND)
+                .as(ApiResponse.class);
+
+        assertThat(apiResponse.getCode(), equalTo(1));
+        assertThat(apiResponse.getType(), equalTo("error"));
+        assertThat(apiResponse.getMessage(), equalTo("Pet not found"));
+    }
+
+    @Test
+    public void testReturnAnErrorIfPetToDeleteDoesNotExist() {
+        petController.deleteAPet(String.valueOf(getRandomNumber()), HttpStatus.SC_NOT_FOUND);
+    }
+
+    @Test
+    public void testReturnAnErrorIfPetToRetrieveDoesNotExist() {
+        ApiResponse apiResponse = petController.getPetByPetId(String.valueOf(getRandomNumber()), HttpStatus.SC_NOT_FOUND)
+                .as(ApiResponse.class);
+
+        assertThat(apiResponse.getCode(), equalTo(1));
+        assertThat(apiResponse.getType(), equalTo("error"));
+        assertThat(apiResponse.getMessage(), equalTo("Pet not found"));
     }
 }

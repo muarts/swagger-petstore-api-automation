@@ -65,4 +65,19 @@ public class PetController {
                 .extract()
                 .response();
     }
+
+    public Response deleteAPet(String petId, int statusCode) {
+        return given()
+                .baseUri("https://petstore.swagger.io/v2")
+                .accept("application/json")
+                .header("api_key", "special-key")
+                .pathParam("petId", petId)
+                .when()
+                .delete("/pet/{petId}")
+                .then()
+                .assertThat()
+                .statusCode(statusCode)
+                .extract()
+                .response();
+    }
 }
