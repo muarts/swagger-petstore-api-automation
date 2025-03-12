@@ -19,7 +19,7 @@ The following dependencies are used in this project:
 
 Allure is integrated for test reporting.
 
-![allure_report.png](allure_report.png)
+![allure_report.png](readme-content/allure_report.png)
 
 ## Run tests and generate report
 - Run tests > `mvn clean test`
