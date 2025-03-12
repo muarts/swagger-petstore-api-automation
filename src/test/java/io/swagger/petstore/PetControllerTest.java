@@ -128,7 +128,7 @@ public class PetControllerTest {
         Pet petToUpdate = petController.postPet(pet, HttpStatus.SC_OK).as(Pet.class);
         Integer petId = Integer.valueOf(String.valueOf(petToUpdate.getId()));
         String newName = getRandomString();
-        ApiResponse apiResponse = petController.updateAPetWithFormData(newName, "sold", petId, HttpStatus.SC_OK)
+        ApiResponse apiResponse = petController.updateAPetWithFormData(newName, PetStatus.sold.toString(), petId, HttpStatus.SC_OK)
                 .as(ApiResponse.class);
 
         assertThat(apiResponse.getCode(), equalTo(SUCCESS_CODE));
