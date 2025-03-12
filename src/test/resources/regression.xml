@@ -5,6 +5,7 @@
         <classes>
             <class name="io.swagger.petstore.PetControllerTest"/>
             <class name="io.swagger.petstore.UserControllerTest"/>
+            <class name="io.swagger.petstore.StoreControllerTest"/>
         </classes>
     </test>
 </suite>
