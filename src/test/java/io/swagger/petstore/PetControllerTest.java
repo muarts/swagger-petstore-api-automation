@@ -10,6 +10,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static io.swagger.petstore.ErrorMessageConstants.*;
 import static io.swagger.petstore.testdata.Helper.getRandomNumber;
 import static io.swagger.petstore.testdata.Helper.waitFor;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -60,10 +61,13 @@ public class PetControllerTest {
 
     @Test
     public void testFindPetsByMultipleStatusValues() {
-        List<Pet> pets = petController.getPetsByStatus("available,pending", HttpStatus.SC_OK)
+        String statusesUnderSearch = String.format("%s,%s", PetStatus.available, PetStatus.pending);
+        List<Pet> pets = petController.getPetsByStatus(statusesUnderSearch, HttpStatus.SC_OK)
                 .jsonPath().getList(".", Pet.class);
 
-        pets.forEach(pet -> assertThat(pet.getStatus(), either(equalTo(PetStatus.available)).or(equalTo(PetStatus.pending))));
+        pets.forEach(pet -> {
+            assertThat(pet.getStatus(), either(equalTo(PetStatus.available)).or(equalTo(PetStatus.pending)));
+        });
     }
 
     @Test
@@ -71,11 +75,11 @@ public class PetControllerTest {
         Pet pet = getPet();
         petController.postPet(pet, HttpStatus.SC_OK).as(Pet.class);
         pet.setStatus(PetStatus.sold);
-        pet.setName("Bella");
+        pet.setName(UPDATED_DOG_NAME);
         Pet updatedPet = petController.updateAnExistingPet(pet, HttpStatus.SC_OK).as(Pet.class);
 
         assertThat(updatedPet.getStatus(), equalTo(pet.getStatus()));
-        assertThat(updatedPet.getName(), equalTo("Bella"));
+        assertThat(updatedPet.getName(), equalTo(UPDATED_DOG_NAME));
     }
 
     @Test
@@ -86,9 +90,9 @@ public class PetControllerTest {
         ApiResponse apiResponse = petController.getPetByPetId(String.valueOf(pet.getId()), HttpStatus.SC_NOT_FOUND)
                 .as(ApiResponse.class);
 
-        assertThat(apiResponse.getCode(), equalTo(1));
-        assertThat(apiResponse.getType(), equalTo("error"));
-        assertThat(apiResponse.getMessage(), equalTo("Pet not found"));
+        assertThat(apiResponse.getCode(), equalTo(ERROR_CODE));
+        assertThat(apiResponse.getType(), equalTo(ERROR_TYPE));
+        assertThat(apiResponse.getMessage(), equalTo(PET_NOT_FOUND));
     }
 
     @Test
@@ -101,8 +105,8 @@ public class PetControllerTest {
         ApiResponse apiResponse = petController.getPetByPetId(String.valueOf(getRandomNumber()), HttpStatus.SC_NOT_FOUND)
                 .as(ApiResponse.class);
 
-        assertThat(apiResponse.getCode(), equalTo(1));
-        assertThat(apiResponse.getType(), equalTo("error"));
-        assertThat(apiResponse.getMessage(), equalTo("Pet not found"));
+        assertThat(apiResponse.getCode(), equalTo(ERROR_CODE));
+        assertThat(apiResponse.getType(), equalTo(ERROR_TYPE));
+        assertThat(apiResponse.getMessage(), equalTo(PET_NOT_FOUND));
     }
 }
