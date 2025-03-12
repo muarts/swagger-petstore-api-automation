@@ -1,19 +1,24 @@
 package io.swagger.petstore.controller;
 
+import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
 import io.swagger.petstore.model.Pet;
 
 import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
-
 public class PetController {
+
+    private final RequestSpecification requestSpecification = new RequestSpecBuilder()
+            .setBaseUri("https://petstore.swagger.io/v2")
+            .setAccept("application/json")
+            .build();
 
     public Response postPet(Pet pet, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .contentType("application/json")
                 .body(pet)
                 .when()
@@ -27,8 +32,7 @@ public class PetController {
 
     public Response getPetByPetId(String petId, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .pathParam("petId", petId)
                 .when()
                 .get("/pet/{petId}")
@@ -41,8 +45,7 @@ public class PetController {
 
     public Response getPetsByStatus(String status, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .queryParam("status", status)
                 .when()
                 .get("/pet/findByStatus")
@@ -55,8 +58,7 @@ public class PetController {
 
     public Response updateAnExistingPet(Pet pet, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .contentType("application/json")
                 .body(pet)
                 .when()
@@ -70,8 +72,7 @@ public class PetController {
 
     public Response deleteAPet(String petId, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .header("api_key", "special-key")
                 .pathParam("petId", petId)
                 .when()
@@ -85,9 +86,8 @@ public class PetController {
 
     public Response uploadImage(Integer petId, File file, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
+                .spec(requestSpecification)
                 .pathParam("petId", petId)
-                .accept("application/json")
                 .contentType("multipart/form-data")
                 .multiPart("file", file, "image/jpeg")
                 .when()
@@ -101,8 +101,7 @@ public class PetController {
 
     public Response updateAPetWithFormData(String name, String status, Integer petId, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .pathParam("petId", petId)
                 .contentType("application/x-www-form-urlencoded")
                 .formParam("name", name)
