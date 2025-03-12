@@ -5,12 +5,11 @@ import io.swagger.petstore.model.User;
 
 import static io.restassured.RestAssured.given;
 
-public class UserController {
+public class UserController extends ControllerBase {
 
     public Response postUser(User user, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .contentType("application/json")
                 .body(user)
                 .when()
@@ -24,8 +23,7 @@ public class UserController {
 
     public Response getLogin(String username, String password, int statusCode) {
         return given()
-                .baseUri("https://petstore.swagger.io/v2")
-                .accept("application/json")
+                .spec(requestSpecification)
                 .queryParam("username", username)
                 .queryParam("password", password)
                 .when()

@@ -1,20 +1,13 @@
 package io.swagger.petstore.controller;
 
-import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.response.Response;
-import io.restassured.specification.RequestSpecification;
 import io.swagger.petstore.model.Pet;
 
 import java.io.File;
 
 import static io.restassured.RestAssured.given;
 
-public class PetController {
-
-    private final RequestSpecification requestSpecification = new RequestSpecBuilder()
-            .setBaseUri("https://petstore.swagger.io/v2")
-            .setAccept("application/json")
-            .build();
+public class PetController extends ControllerBase {
 
     public Response postPet(Pet pet, int statusCode) {
         return given()
