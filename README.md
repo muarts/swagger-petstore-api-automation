@@ -32,3 +32,4 @@ Allure is integrated for test reporting.
 - It does not cover all happy paths and edge cases.
 - Some happy path test cases may fail occasionally due to API issues (which are actual bugs that need to be fixed). These failures do not indicate flaky tests.
 - Future maintenance may be required as the API evolves.
+- Data cleanup is not performed, considering that the API under test is in a temporary, isolated testing environment. (It is good practice to clean up the data afterward if tests are run against the staging environment.)
